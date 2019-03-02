@@ -96,7 +96,8 @@
     position: fixed;
     bottom: 2rem;
     right: 2rem;
-    font-size: 1rem;
+    font-size: 2rem;
+    line-height: 1rem;
     z-index: 1;
     opacity: 0;
 }
