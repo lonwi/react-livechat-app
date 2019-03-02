@@ -61,6 +61,10 @@
 .Chat-message--author {
     font-size: 0.6rem;
     font-style: italic;
+    font-weight: 700;
+}
+.Chat-message--time {
+    font-weight: 400;
 }
 .Chat-footer {
     background: darkcyan;
@@ -85,7 +89,6 @@
     width: 20%;
     padding: 0.5rem 1rem;
 }
-
 .Chat-fab {
     background: darkcyan;
     border:3px solid mediumturquoise;

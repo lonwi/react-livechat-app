@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
+import moment from 'moment';
+import * as io from 'socket.io-client';
 import './Chat.css';
 
 class Chat extends Component {
+
+    socketConnection = null;
+
     constructor() {
         super();
         this.state = {
@@ -9,6 +14,14 @@ class Chat extends Component {
             messages: [],
             show: false
         }
+        this.socketConnection = io.connect('https://socket-chat-server-yvhjqrpgyq.now.sh');
+
+        this.socketConnection.on('chat message', this.addMessage);
+    }
+
+    addMessage = (message) => {
+        this.setState({ messages: [...this.state.messages, message] });
+        console.log(message);
     }
 
     handleOpen = () => {
@@ -28,11 +41,21 @@ class Chat extends Component {
         if (this.message.value) {
             const message = {
                 text: this.message.value,
-                authorId: this.state.author
+                authorId: this.state.author,
+                //timestamp: moment().unix()
             }
-            this.setState({ messages: [...this.state.messages, message] });
+            this.socketConnection.emit('chat message', message);
+            //this.setState({ messages: [...this.state.messages, message] });
             this.message.value = '';
         }
+    }
+
+    timeAgo = (timestamp) => {
+        return ( 
+            <span className="Chat-message--time">
+            {moment(timestamp).fromNow()}
+            </span>
+        );
     }
 
     render() {
@@ -47,7 +70,7 @@ class Chat extends Component {
 
                     <div className="Chat-main">
                         <div className="Chat-messages">
-                            {this.state.messages.map((message, index) => <div className="Chat-message" key={index}>{message.text} <div className="Chat-message--author">{message.authorId}</div></div>)}
+                            {this.state.messages.map((message, index) => <div className="Chat-message" key={index}>{message.text} <div className="Chat-message--author">{message.authorId}, {this.timeAgo(message.timestamp)}</div></div>)}
                         </div>
                     </div>
 
